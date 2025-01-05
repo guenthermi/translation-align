@@ -1,0 +1,44 @@
+Compare the following two texts, Text 1 and Text 2, based on the criteria of simplicity, formality, and positive connotation. For each divergent passage, assign a score to each criterion using a scale from 1 to 10, where:
+
+5 indicates both texts have the same level for the given criterion.
+
+A score below 5 indicates that Text 1 has a higher level for the given criterion.
+
+A score above 5 indicates that Text 2 has a higher level for the given criterion.
+
+Additionally, calculate an overall score for each criterion, reflecting the general trend across all differences.
+
+Texts:
+
+Text 1:
+{inputText1}
+
+Text 2:
+{inputText2}
+
+Differences:
+
+{differences}
+
+Output Format:
+
+Provide the results as a JSON object in the following structure:
+
+{
+  "individual_scores": [
+    {
+      "difference_id": <id>,
+      "simplicity": <simplicity_score>,
+      "formality": <formality_score>,
+      "positive_connotation": <positive_connotation_score>
+    },
+    ...
+  ],
+  "overall_scores": {
+    "simplicity": <overall_simplicity_score>,
+    "formality": <overall_formality_score>,
+    "positive_connotation": <overall_positive_connotation_score>
+  }
+}
+
+JSON Output: 

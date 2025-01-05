@@ -1,0 +1,10 @@
+Translate the following texts to {language}, preserving their original format and structure.
+Input Texts:
+{inputText}
+
+Return a JSON with the structure:
+{
+  "translated_text": <translated-text>
+}
+
+JSON-Output: 
