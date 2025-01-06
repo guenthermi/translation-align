@@ -12,6 +12,10 @@ export default function Home() {
   const [translation2, setTranslation2] = useState('');
   const [diffOutput, setDiffOutput] = useState<string | null>(null);
   const [wordCountDiff, setWordCountDiff] = useState<number | null>(null);
+  const [formalityScore, setFormalityScore] = useState<number>(0);
+  const [positiveConnotationScore, setPositiveConnotationScore] = useState<number>(0);
+  const [simplicityScore, setSimplicityScore] = useState<number>(0);
+
 
   const handleTranslate = async () => {
     try {
@@ -74,7 +78,17 @@ export default function Home() {
     setDiffOutput(formattedDiff);
     setWordCountDiff(wordDifference);
 
-    const differencesJson: string = JSON.stringify(diff) // todo make this right
+    let differences: any = [];
+    let last_entry: any = diff[0]
+    for (let i: number = 1; i < diff.length; i++) {
+      if (last_entry.removed && diff[i].added){
+        differences.push({"difference_id": i, "text1": last_entry.value, "text2": diff[i].value});
+      }
+      last_entry = diff[i];
+    }
+
+    const differencesJson: string = JSON.stringify(differences)
+    console.log(differencesJson);
     try {
       const response = await fetch(
         `/api/gemini?prompt=${encodeURIComponent(
@@ -99,8 +113,12 @@ export default function Home() {
       const parsedData = JSON.parse(responseData.data.substring(startIndex, endIndex + 1));
 
       // TODO set chart values
+      console.log(parsedData);
+      setFormalityScore(parsedData.overall_scores['formality'] - 5);
+      setSimplicityScore(parsedData.overall_scores['simplicity'] - 5);
+      setPositiveConnotationScore(parsedData.overall_scores['positive_connotation'] - 5);
     } catch (error) {
-      console.error('Error while translating:', error);
+      console.error('Error while comparing:', error);
       alert('Failed to fetch translation. Please try again.');
     }
   };
@@ -217,7 +235,7 @@ export default function Home() {
               dangerouslySetInnerHTML={{ __html: diffOutput }}
             ></div>
           )}
-          { (wordCountDiff !== null) && (<TranslationComparison labels={["Word Difference"]} values={[wordCountDiff]} />)}
+          { (wordCountDiff !== null) && (<TranslationComparison labels={["Word Difference", "Formality", "Positive Connotation", "Simplicity"]} values={[wordCountDiff, formalityScore, positiveConnotationScore, simplicityScore]} />)}
           </div>
           
         </div>
