@@ -1,6 +1,4 @@
-import path from 'path';
-
-let templateCache: { [key: string]: string } = {};
+const templateCache: { [key: string]: string } = {};
 
 const translationTemplatePath: string = 'prompts/translation.txt';
 const compareTemplatePath: string = 'prompts/comparison.txt';
@@ -26,18 +24,24 @@ export async function loadTemplate(templateName: string): Promise<string> {
 
 export const translatePromptTemplate = async (
   inputText: string,
-  language: string
+  language: string,
+  simplicity: number,
+  formality: number,
+  positiveConnotation: number,
 ): Promise<string> => {
   const template = await loadTemplate(translationTemplatePath);
   return template
     .replace('{language}', language)
-    .replace('{inputText}', inputText);
+    .replace('{inputText}', inputText)
+    .replace('{simplicity}', simplicity.toString())
+    .replace('{formality}', formality.toString())
+    .replace('{positiveConnotation}', positiveConnotation.toString());
 };
 
 export const comparePromptTemplate = async (
   inputText1: string,
   inputText2: string,
-  differences: string
+  differences: string,
 ): Promise<string> => {
   const template = await loadTemplate(compareTemplatePath);
   return template

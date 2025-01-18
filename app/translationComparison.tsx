@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
 } from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -17,11 +18,8 @@ type TranslationComparisonProps = {
   values: number[];
 };
 
-const TranslationComparison: React.FC<TranslationComparisonProps> = ({
-  labels,
-  values,
-}) => {
-  const [chartOptions, setChartOptions] = useState<any>(null);
+const TranslationComparison: React.FC<TranslationComparisonProps> = ({ labels, values }) => {
+  const [chartOptions, setChartOptions] = useState<ChartOptions | null>(null);
 
   useEffect(() => {
     if (labels.length !== values.length) {
@@ -81,7 +79,7 @@ const TranslationComparison: React.FC<TranslationComparisonProps> = ({
         label: 'Comparison Metrics',
         data: values,
         backgroundColor: values.map(
-          (_, index) => ['#6366f1', '#4f46e5', '#4338ca', '#3730a3'][index % 4]
+          (_, index) => ['#6366f1', '#4f46e5', '#4338ca', '#3730a3'][index % 4],
         ),
         borderWidth: 1,
       },

@@ -1,4 +1,20 @@
 Translate the following texts to {language}, preserving their original format and structure.
+
+Choose words and phrases based on the following metric scores defined on a scale of 1 to 10:
+
+Simplicity (1-10): {simplicityScore}
+- **1**: Use highly complex, technical, or specialized language, suitable for expert audiences.  
+- **10**: Use very simple, clear, and easily understandable language, suitable for general or novice audiences.
+
+Formality (1-10): {formalityScore}
+- **1**: Use informal, casual, or conversational language, including slang or colloquialisms.  
+- **10**: Use highly formal and professional language, adhering strictly to conventions and etiquette.
+
+Positive Connotation (1-10): {positiveConnotationScore}
+- **1**: Use language with strongly negative and pessimistic undertones, aiming to evoke negativity.
+- **5**: Use neutral language, prioritizing factual accuracy over tone.  
+- **10**: Use language with strongly positive and optimistic undertones, aiming to evoke goodwill or positivity.
+
 Input Texts:
 {inputText}
 

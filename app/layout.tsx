@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Merriweather, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
 const geistSans = Merriweather({
   variable: '--font-geist-sans',
   subsets: ['latin'],
-  weight: "300",
+  weight: '300',
 });
 
 const geistMono = Geist_Mono({
@@ -30,20 +31,20 @@ export default function RootLayout({
           {/* Sidebar */}
           <nav className="w-64 flex flex-col font-[family-name:var(--font-geist-sans)]">
             <div className="p-4 border-b border-gray-700">
-              <a href="/" className="block">
+              <Link href="/" className="block">
                 <img src="/logo.svg" alt="TransLingoPath Logo" className="h-16 mx-auto" />
-              </a>
+              </Link>
             </div>
             <ul className="flex-grow space-y-2 p-4">
               <li>
-                <a href="/about" className="block p-2 rounded hover:bg-gray-700 transition">
+                <Link href="/about" className="block p-2 rounded hover:bg-gray-700 transition">
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contact" className="block p-2 rounded hover:bg-gray-700 transition">
+                <Link href="/contact" className="block p-2 rounded hover:bg-gray-700 transition">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
             <div className="p-4 border-t border-gray-700">

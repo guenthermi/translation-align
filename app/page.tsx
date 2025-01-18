@@ -1,27 +1,45 @@
 'use client'; // Add this at the top to mark the component as a client component
 
 import { useState } from 'react';
-import { diffWords } from "diff";
+import { diffWords, Change } from 'diff';
 import TranslationComparison from './translationComparison';
-import {translatePromptTemplate, comparePromptTemplate} from './templateLoaders';
+import { translatePromptTemplate, comparePromptTemplate } from './templateLoaders';
+
+type TextDiff = {
+  difference_id?: number;
+  text1?: string;
+  text2?: string;
+};
 
 export default function Home() {
   const [originalText, setOriginalText] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('en');
+
   const [translation1, setTranslation1] = useState('');
   const [translation2, setTranslation2] = useState('');
+
   const [diffOutput, setDiffOutput] = useState<string | null>(null);
   const [wordCountDiff, setWordCountDiff] = useState<number | null>(null);
+
   const [formalityScore, setFormalityScore] = useState<number>(0);
   const [positiveConnotationScore, setPositiveConnotationScore] = useState<number>(0);
   const [simplicityScore, setSimplicityScore] = useState<number>(0);
 
+  const [formalitySlider, setFormalitySlider] = useState<number>(0);
+  const [positiveConnotationSlider, setPositiveConnotationSlider] = useState<number>(0);
+  const [simplicitySlider, setSimplicitySlider] = useState<number>(0);
 
   const handleTranslate = async () => {
     try {
       const response = await fetch(
         `/api/gemini?prompt=${encodeURIComponent(
-          await translatePromptTemplate(originalText, targetLanguage),
+          await translatePromptTemplate(
+            originalText,
+            targetLanguage,
+            formalitySlider,
+            positiveConnotationSlider,
+            simplicitySlider,
+          ),
         )}`,
       );
 
@@ -50,22 +68,22 @@ export default function Home() {
   };
 
   const handleCompare = async () => {
-    const diff = diffWords(translation1, translation2);
-    
+    const diff: Change[] = diffWords(translation1, translation2);
+
     const addedCount = diff
-      .filter((obj: any) => obj.added)
-      .map((obj: any) => obj.count)
-      .reduce((sum: number, count: number) => sum + count, 0);
+      .filter((obj: Change) => obj.added)
+      .map((obj: Change) => obj.count)
+      .reduce((sum: number, count: number | undefined) => sum + (count ?? 0), 0);
 
     const removedCount = diff
-      .filter((obj: any) => obj.removed)
-      .map((obj: any) => obj.count)
-      .reduce((sum: number, count: number) => sum + count, 0);
+      .filter((obj: Change) => obj.removed)
+      .map((obj: Change) => obj.count)
+      .reduce((sum: number, count: number | undefined) => sum + (count ?? 0), 0);
 
     const wordDifference: number = addedCount - removedCount;
-    
+
     const formattedDiff = diff
-      .map((part: any) => {
+      .map((part: Change) => {
         if (part.added) {
           return `<span class="bg-green-100 text-green-800">${part.value}</span>`;
         } else if (part.removed) {
@@ -74,20 +92,21 @@ export default function Home() {
           return `<span>${part.value}</span>`;
         }
       })
-      .join("");
+      .join('');
     setDiffOutput(formattedDiff);
     setWordCountDiff(wordDifference);
 
-    let differences: any = [];
-    let last_entry: any = diff[0]
+    const differences: TextDiff[] = [];
+    let last_entry: Change = diff[0];
+
     for (let i: number = 1; i < diff.length; i++) {
-      if (last_entry.removed && diff[i].added){
-        differences.push({"difference_id": i, "text1": last_entry.value, "text2": diff[i].value});
+      if (last_entry.removed && diff[i].added) {
+        differences.push({ difference_id: i, text1: last_entry.value, text2: diff[i].value });
       }
       last_entry = diff[i];
     }
 
-    const differencesJson: string = JSON.stringify(differences)
+    const differencesJson: string = JSON.stringify(differences);
     console.log(differencesJson);
     try {
       const response = await fetch(
@@ -133,7 +152,10 @@ export default function Home() {
             {/* Collapsable 1: Original Language */}
             <div className="w-full sm:w-1/3">
               <label className="block text-sm font-semibold mb-2">Original Language</label>
-              <select className="w-full p-2 border rounded-md border border-slate-700 bg-slate-800 py-2 px-3 text-gray-200 shadow-sm" defaultValue="en">
+              <select
+                className="w-full p-2 border rounded-md border border-slate-700 bg-slate-800 py-2 px-3 text-gray-200 shadow-sm"
+                defaultValue="en"
+              >
                 <option value="en">English</option>
                 <option value="fr">French</option>
                 <option value="es">Spanish</option>
@@ -166,7 +188,7 @@ export default function Home() {
               >
                 Translate
               </button>
-              <button 
+              <button
                 className="px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition mt-7"
                 onClick={handleCompare}
               >
@@ -177,14 +199,26 @@ export default function Home() {
 
           {/* Sliders */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
-            {['Simplicity', 'Formality', 'Positive Connotation'].map((label) => (
-              <div key={label}>
-                <label className="block text-sm font-semibold mb-2">{label}</label>
+            {[
+              ['Simplicity', simplicitySlider, setSimplicitySlider],
+              ['Formality', formalitySlider, setFormalitySlider],
+              ['Positive Connotation', positiveConnotationSlider, setPositiveConnotationSlider],
+            ].map((sliderConfig) => (
+              <div key={(sliderConfig as [string, number, (_: number) => void])[0]}>
+                <label className="block text-sm font-semibold mb-2">
+                  {(sliderConfig as [string, number, (_: number) => void])[0]}
+                </label>
                 <input
                   type="range"
                   min="1"
                   max="10"
+                  value={(sliderConfig as [string, number, (_: number) => void])[1]}
                   className="w-full h-2 bg-gray-300 rounded-lg cursor-pointer"
+                  onChange={(e) =>
+                    (sliderConfig as [string, number, (_: number) => void])[2](
+                      parseInt(e.target.value),
+                    )
+                  }
                 />
               </div>
             ))}
@@ -226,18 +260,23 @@ export default function Home() {
         </div>
         {/* Container 3: Diff Output */}
         <div className="w-full p-6 bg-gray-900 rounded-lg shadow-md flex gap-6 border border-sky-800">
-          <div className="flex-1"> 
-          
-          <label className="block text-sm font-semibold mb-4">Difference Between the Translations</label>
-          {diffOutput && (
-            <div
-              className="w-full p-6 bg-gray-50 rounded-lg shadow-md text-gray-200 border-slate-700 bg-slate-800"
-              dangerouslySetInnerHTML={{ __html: diffOutput }}
-            ></div>
-          )}
-          { (wordCountDiff !== null) && (<TranslationComparison labels={["Word Difference", "Formality", "Positive Connotation", "Simplicity"]} values={[wordCountDiff, formalityScore, positiveConnotationScore, simplicityScore]} />)}
+          <div className="flex-1">
+            <label className="block text-sm font-semibold mb-4">
+              Difference Between the Translations
+            </label>
+            {diffOutput && (
+              <div
+                className="w-full p-6 bg-gray-50 rounded-lg shadow-md text-gray-200 border-slate-700 bg-slate-800"
+                dangerouslySetInnerHTML={{ __html: diffOutput }}
+              ></div>
+            )}
+            {wordCountDiff !== null && (
+              <TranslationComparison
+                labels={['Word Difference', 'Formality', 'Positive Connotation', 'Simplicity']}
+                values={[wordCountDiff, formalityScore, positiveConnotationScore, simplicityScore]}
+              />
+            )}
           </div>
-          
         </div>
       </main>
 
