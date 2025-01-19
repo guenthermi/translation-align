@@ -19,7 +19,7 @@ type TranslationComparisonProps = {
 };
 
 const TranslationComparison: React.FC<TranslationComparisonProps> = ({ labels, values }) => {
-  const [chartOptions, setChartOptions] = useState<ChartOptions | null>(null);
+  const [chartOptions, setChartOptions] = useState<ChartOptions<'bar'> | null>(null);
 
   useEffect(() => {
     if (labels.length !== values.length) {
@@ -35,15 +35,14 @@ const TranslationComparison: React.FC<TranslationComparisonProps> = ({ labels, v
             display: true,
             color: '#075985',
           },
-          min: values === null ? -5 : Math.min(-5, ...values),
-          max: values === null ? 5 : Math.max(5, ...values),
+          min: values === null ? -5 : Math.min(-3, ...values),
+          max: values === null ? 5 : Math.max(3, ...values),
           ticks: {
             color: 'white', // Set x-axis font color to white
             font: {
               size: 14, // Set font size for x-axis tick labels
             },
           },
-          borderColor: 'white',
         },
         y: {
           grid: {
@@ -57,16 +56,12 @@ const TranslationComparison: React.FC<TranslationComparisonProps> = ({ labels, v
               size: 14, // Set font size for x-axis tick labels
             },
           },
-          borderColor: 'white',
           offset: true,
         },
       },
       plugins: {
         legend: {
           display: false,
-        },
-        chartArea: {
-          backgroundColor: 'transparent',
         },
       },
     });

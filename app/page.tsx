@@ -25,9 +25,9 @@ export default function Home() {
   const [positiveConnotationScore, setPositiveConnotationScore] = useState<number>(0);
   const [simplicityScore, setSimplicityScore] = useState<number>(0);
 
-  const [formalitySlider, setFormalitySlider] = useState<number>(0);
-  const [positiveConnotationSlider, setPositiveConnotationSlider] = useState<number>(0);
-  const [simplicitySlider, setSimplicitySlider] = useState<number>(0);
+  const [formalitySlider, setFormalitySlider] = useState<number>(5);
+  const [positiveConnotationSlider, setPositiveConnotationSlider] = useState<number>(5);
+  const [simplicitySlider, setSimplicitySlider] = useState<number>(5);
 
   const handleTranslate = async () => {
     try {
@@ -148,22 +148,7 @@ export default function Home() {
         {/* Container 1: Controls */}
         <div className="flex flex-col gap-4 w-full p-6 bg-gray-900 rounded-lg shadow-md border border-sky-800">
           {/* Collapsables for languages and buttons */}
-          <div className="flex flex-wrap gap-4 items-center justify-between">
-            {/* Collapsable 1: Original Language */}
-            <div className="w-full sm:w-1/3">
-              <label className="block text-sm font-semibold mb-2">Original Language</label>
-              <select
-                className="w-full p-2 border rounded-md border border-slate-700 bg-slate-800 py-2 px-3 text-gray-200 shadow-sm"
-                defaultValue="en"
-              >
-                <option value="en">English</option>
-                <option value="fr">French</option>
-                <option value="es">Spanish</option>
-                <option value="de">German</option>
-                {/* Add more options as needed */}
-              </select>
-            </div>
-
+          <div className="flex flex-wrap gap-4 items-center justify-start">
             {/* Collapsable 2: Target Language */}
             <div className="w-full sm:w-1/3">
               <label className="block text-sm font-semibold mb-2">Target Language</label>
@@ -271,9 +256,14 @@ export default function Home() {
               ></div>
             )}
             {wordCountDiff !== null && (
+              <label className="block text-sm font-semibold my-2">
+                Word Difference: {wordCountDiff}
+              </label>
+            )}
+            {wordCountDiff !== null && (
               <TranslationComparison
-                labels={['Word Difference', 'Formality', 'Positive Connotation', 'Simplicity']}
-                values={[wordCountDiff, formalityScore, positiveConnotationScore, simplicityScore]}
+                labels={['Formality', 'Positive Connotation', 'Simplicity']}
+                values={[formalityScore, positiveConnotationScore, simplicityScore]}
               />
             )}
           </div>

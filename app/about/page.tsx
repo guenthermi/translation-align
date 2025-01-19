@@ -1,8 +1,13 @@
 export default function AboutPage() {
   return (
-    <p>
-      TranslationAlign is a translation comparision tool.{' '}
-      <a style={{ color: '#ccc' }}>TODO: add some more text</a>
-    </p>
+    <div>
+      <p>TranslationAlign is a translation comparision tool.</p>
+      <p>
+        <a style={{ color: '#ccc' }}>
+          The tool is able to translate texts into different languages using LLMs and compare them
+          with respect to different criteria
+        </a>
+      </p>
+    </div>
   );
 }
