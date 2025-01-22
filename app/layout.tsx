@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'TranslationAlign',
-  description: 'Translate texts into different languages using LLMs and compare them with respect to different criteria',
+  description:
+    'Translate texts into different languages using LLMs and compare them with respect to different criteria',
 };
 
 export default function RootLayout({

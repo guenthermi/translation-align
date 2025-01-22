@@ -21,5 +21,5 @@ Then you can run the Web application by running `npm install`, `npm run build`, 
 ## Future plans
 
 - Support more criteria
-- Support other instructions (e.g., instruct the LLM to use specific terminology, data formats, ect.)
+- Support more modification without custom instructions (e.g., instruct the LLM to use specific terminology, date formats, ect.)
 - Alternatives to Gemini for the translation

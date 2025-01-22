@@ -1,5 +1,7 @@
 Translate the following texts to {language}, preserving their original format and structure.
 
+{customInstructions}
+
 Choose words and phrases based on the following metric scores defined on a scale of 1 to 10:
 
 Simplicity (1-10): {simplicityScore}

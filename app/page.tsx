@@ -29,6 +29,8 @@ export default function Home() {
   const [positiveConnotationSlider, setPositiveConnotationSlider] = useState<number>(5);
   const [simplicitySlider, setSimplicitySlider] = useState<number>(5);
 
+  const [customInstructions, setCustomInstructions] = useState<string>('');
+
   const handleTranslate = async () => {
     try {
       const response = await fetch(
@@ -39,6 +41,7 @@ export default function Home() {
             formalitySlider,
             positiveConnotationSlider,
             simplicitySlider,
+            customInstructions,
           ),
         )}`,
       );
@@ -207,6 +210,17 @@ export default function Home() {
                 />
               </div>
             ))}
+          </div>
+
+          {/* Custom Instructions */}
+          <div className="mt-4">
+            <label className="block text-sm font-semibold mb-2">Custom Instructions</label>
+            <textarea
+              className="w-full h-24 p-4 border rounded-md resize-none text-gray-200 border-slate-700 bg-slate-800"
+              placeholder="Here you can enter custom instructions for the the translation process..."
+              value={customInstructions}
+              onChange={(e) => setCustomInstructions(e.target.value)}
+            />
           </div>
         </div>
 

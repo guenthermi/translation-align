@@ -28,10 +28,13 @@ export const translatePromptTemplate = async (
   simplicity: number,
   formality: number,
   positiveConnotation: number,
+  additionalInstructions: string = '',
 ): Promise<string> => {
   const template = await loadTemplate(translationTemplatePath);
+  additionalInstructions = additionalInstructions.replace('{inputText}', '');
   return template
     .replace('{language}', language)
+    .replace('{customInstructions}', additionalInstructions)
     .replace('{inputText}', inputText)
     .replace('{simplicity}', simplicity.toString())
     .replace('{formality}', formality.toString())
